@@ -133,6 +133,34 @@
   box-shadow: 0 0 3px var(--green-glow);
 }
 
+/* Target Locked Indicator */
+.target-locked-indicator {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10001;
+  transform: translate(-50%, -150%);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: var(--green-primary);
+  text-shadow: 0 0 10px var(--green-glow), 0 0 20px var(--green-glow);
+  animation: target-blink 0.5s ease-in-out infinite;
+  font-weight: bold;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--green-primary);
+  box-shadow: 0 0 15px var(--green-glow);
+}
+
+@keyframes target-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
 /* CRT Scanline Effect */
 .scanlines {
   position: fixed;

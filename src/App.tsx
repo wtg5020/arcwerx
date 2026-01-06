@@ -85,12 +85,6 @@ function App() {
       <div className="crt-overlay"></div>
       <div className="vignette"></div>
 
-      {/* HUD Corner Elements */}
-      <div className="hud-corner top-left"></div>
-      <div className="hud-corner top-right"></div>
-      <div className="hud-corner bottom-left"></div>
-      <div className="hud-corner bottom-right"></div>
-
       {/* Radar Sweep */}
       <div className="radar-container">
         <div className="radar-sweep"></div>
@@ -99,19 +93,18 @@ function App() {
         <div className="radar-blip" style={{top: '50%', left: '80%'}}></div>
       </div>
 
-      {/* Targeting Reticle - Center */}
-      <div className={`targeting-reticle ${targetLocked ? 'locked' : ''}`}>
-        <div className="reticle-outer">
-          <div className="reticle-tick top"></div>
-          <div className="reticle-tick right"></div>
-          <div className="reticle-tick bottom"></div>
-          <div className="reticle-tick left"></div>
+      {/* Target Locked Indicator - Follows Cursor */}
+      {targetLocked && (
+        <div
+          className="target-locked-indicator"
+          style={{
+            left: `${cursorPos.x}px`,
+            top: `${cursorPos.y}px`
+          }}
+        >
+          TARGET LOCKED
         </div>
-        <div className="reticle-inner"></div>
-        <div className="crosshair-h"></div>
-        <div className="crosshair-v"></div>
-        {targetLocked && <div className="lock-indicator">TARGET LOCKED</div>}
-      </div>
+      )}
 
       {/* Top Status Bar */}
       <div className="top-status-bar">
