@@ -1,0 +1,71 @@
+/* Global Reset for HUD Terminal Aesthetic */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: 'Share Tech Mono', 'VT323', monospace;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+  color: #00ff00;
+  background-color: #000000;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #000000;
+  color: #00ff00;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+a {
+  color: #00ff00;
+  text-decoration: none;
+  border-bottom: 1px solid #00ff00;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: #00aa00;
+  text-shadow: 0 0 10px #00ff0080;
+}
+
+button {
+  border: 1px solid #00ff00;
+  background: transparent;
+  color: #00ff00;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+button:hover {
+  background: rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 10px #00ff0080;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid #00ff00;
+  outline-offset: 2px;
+}
