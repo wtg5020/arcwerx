@@ -1,4 +1,4 @@
-/* Global Reset for HUD Terminal Aesthetic */
+/* Global Reset for HUD Terminal Aesthetic with Theme Support */
 
 * {
   margin: 0;
@@ -10,13 +10,25 @@
   font-family: 'Share Tech Mono', 'VT323', monospace;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: dark;
-  color: #00ff00;
-  background-color: #000000;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark mode color scheme */
+:root.dark-mode,
+:root {
+  color-scheme: dark;
+  color: #00ff00;
+  background-color: #000000;
+}
+
+/* Light mode color scheme - Section 508 compliant */
+:root.light-mode {
+  color-scheme: light;
+  color: #1a1a1a;
+  background-color: #ffffff;
 }
 
 body {
@@ -24,9 +36,10 @@ body {
   padding: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #000000;
-  color: #00ff00;
+  background: var(--background, #000000);
+  color: var(--text-primary, #00ff00);
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -35,21 +48,31 @@ body {
 }
 
 a {
-  color: #00ff00;
-  text-decoration: none;
-  border-bottom: 1px solid #00ff00;
+  color: var(--primary-color, #00ff00);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
   transition: all 0.3s ease;
 }
 
 a:hover {
-  color: #00aa00;
-  text-shadow: 0 0 10px #00ff0080;
+  color: var(--primary-dim, #00aa00);
+  text-decoration-thickness: 2px;
+}
+
+.dark-mode a:hover {
+  text-shadow: 0 0 10px var(--primary-glow);
+}
+
+a:focus {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 3px;
 }
 
 button {
-  border: 1px solid #00ff00;
+  border: 2px solid var(--border-color, #00ff00);
   background: transparent;
-  color: #00ff00;
+  color: var(--text-primary, #00ff00);
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-family: inherit;
@@ -60,12 +83,30 @@ button {
 }
 
 button:hover {
-  background: rgba(0, 255, 0, 0.1);
-  box-shadow: 0 0 10px #00ff0080;
+  background: var(--background-panel-hover, rgba(0, 255, 0, 0.1));
+}
+
+.dark-mode button:hover {
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.light-mode button:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 button:focus,
 button:focus-visible {
-  outline: 2px solid #00ff00;
-  outline-offset: 2px;
+  outline: 3px solid var(--primary-color, #00ff00);
+  outline-offset: 3px;
+}
+
+/* Section 508: Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
