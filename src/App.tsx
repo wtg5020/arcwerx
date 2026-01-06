@@ -5,18 +5,47 @@ function App() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [targetLocked, setTargetLocked] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
+  const [cursorHover, setCursorHover] = useState(false)
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     const lockTimer = setTimeout(() => setTargetLocked(true), 2000)
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPos({ x: e.clientX, y: e.clientY })
+
+      // Check if hovering over interactive element
+      const target = e.target as HTMLElement
+      const isInteractive = target.closest('button, a, input, textarea, .nav-target')
+      setCursorHover(!!isInteractive)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+
     return () => {
       clearInterval(timer)
       clearTimeout(lockTimer)
+      window.removeEventListener('mousemove', handleMouseMove)
     }
   }, [])
 
   return (
     <div className="hud-container">
+      {/* Custom Targeting Cursor */}
+      <div
+        className={`custom-cursor ${cursorHover ? 'cursor-hover' : ''}`}
+        style={{
+          left: `${cursorPos.x}px`,
+          top: `${cursorPos.y}px`
+        }}
+      >
+        <div className="cursor-crosshair-h"></div>
+        <div className="cursor-crosshair-v"></div>
+        <div className="cursor-circle"></div>
+        <div className="cursor-dot"></div>
+      </div>
+
       {/* CRT Scanline Overlay */}
       <div className="scanlines"></div>
       <div className="crt-overlay"></div>
