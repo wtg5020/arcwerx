@@ -5,18 +5,81 @@ function App() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [targetLocked, setTargetLocked] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
+  const [cursorHover, setCursorHover] = useState(false)
+  const [scrollSpeed, setScrollSpeed] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     const lockTimer = setTimeout(() => setTargetLocked(true), 2000)
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPos({ x: e.clientX, y: e.clientY })
+
+      // Check if hovering over interactive element
+      const target = e.target as HTMLElement
+      const isInteractive = target.closest('button, a, input, textarea, .nav-target')
+      setCursorHover(!!isInteractive)
+    }
+
+    // Scroll speed tracking
+    let lastScrollY = window.scrollY
+    let lastScrollTime = Date.now()
+
+    const handleScroll = () => {
+      const now = Date.now()
+      const currentScrollY = window.scrollY
+      const timeDelta = now - lastScrollTime
+      const scrollDelta = Math.abs(currentScrollY - lastScrollY)
+
+      if (timeDelta > 0) {
+        // Calculate velocity in pixels per second
+        const velocity = (scrollDelta / timeDelta) * 1000
+        // Convert to MACH (scaled for effect: ~1000 pixels/sec = MACH 1.0)
+        const machSpeed = Math.min(velocity / 1000, 9.9)
+        setScrollSpeed(machSpeed)
+      }
+
+      lastScrollY = currentScrollY
+      lastScrollTime = now
+    }
+
+    // Decay scroll speed to 0 when not scrolling
+    const decayInterval = setInterval(() => {
+      setScrollSpeed((prev) => {
+        if (prev <= 0.1) return 0
+        return prev * 0.9 // Decay by 10% each interval
+      })
+    }, 100)
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
     return () => {
       clearInterval(timer)
+      clearInterval(decayInterval)
       clearTimeout(lockTimer)
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('scroll', handleScroll)
     }
   }, [])
 
   return (
     <div className="hud-container">
+      {/* Custom Targeting Cursor */}
+      <div
+        className={`custom-cursor ${cursorHover ? 'cursor-hover' : ''}`}
+        style={{
+          left: `${cursorPos.x}px`,
+          top: `${cursorPos.y}px`
+        }}
+      >
+        <div className="cursor-crosshair-h"></div>
+        <div className="cursor-crosshair-v"></div>
+        <div className="cursor-circle"></div>
+        <div className="cursor-dot"></div>
+      </div>
+
       {/* CRT Scanline Overlay */}
       <div className="scanlines"></div>
       <div className="crt-overlay"></div>
@@ -56,7 +119,7 @@ function App() {
           <span className="blink">●</span> SYSTEM ONLINE | AIR RESERVE COMPONENT | STATUS: ACTIVE
         </div>
         <div className="status-right">
-          RNG: 2.4KM | ALT: 1839M | SPD: MACH 0.0
+          RNG: 2.4KM | ALT: 728M | SPD: <span className={scrollSpeed > 2.0 ? 'speed-warning' : ''}>MACH {scrollSpeed.toFixed(1)}</span>
         </div>
       </div>
 
