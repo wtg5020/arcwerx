@@ -1,0 +1,9 @@
+.biocard_image {
+    object-fit: cover;
+    max-width:300px;
+    max-height:500px;
+  }
+
+  .card {
+    flex-direction: row;
+  }

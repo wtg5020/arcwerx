@@ -1,0 +1,261 @@
+/*----- Top Section -------*/
+.top-section {
+    background: linear-gradient(to bottom, rgb(158, 157, 157) 75%, white 25%);
+    height: 400px;
+    color: rgb(247, 247, 247);
+    display: grid;
+    place-items: center;
+}
+
+.top-section-content {
+    position: relative;
+    margin-top: -150px;
+}
+
+
+
+.top-section-image {
+    position: relative;
+    z-index: 1;
+}
+
+.top-section-title {
+    position: absolute;
+    top: 45%;
+    left: 43%;
+    transform: translate(0, -50%);
+    z-index: 2;
+    text-align: left;
+    width: 500px;
+}
+
+.laptop {
+    max-height: 680px;
+    margin-left: -250px;
+}
+
+.top-section-title h2 {
+    font-family: "CA Medium", Arial, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 40px;
+    color: rgb(247, 247, 247);
+    text-shadow: 3px 3px #676666, 2px 2px #555555;
+}
+
+@media screen and (min-width: 731px) and (max-width: 900px) {
+  .top-section {
+    height:300px;
+  }
+
+  .laptop {
+    max-height: 500px;
+    margin-left: -250px;
+  }
+
+  .top-section-content {
+    position: relative;
+    margin-top: -110px;
+  }
+
+  .top-section-title{
+    width: 200px;
+  }
+
+  .top-section-title h2 {
+    font-size: 30px;
+    color: rgb(247, 247, 247);
+    text-shadow: 3px 3px #676666, 2px 2px #555555;
+  }
+
+}
+
+@media (max-width: 730px) {
+  .laptop{
+    max-height:270px;
+    margin-left:-200px;
+  }
+
+  .top-section{
+    min-height: none;
+    height:200px;
+  }
+
+  .top-section-title h2 {
+    font-size: 30px;
+    color: rgb(247, 247, 247);
+    text-shadow: 3px 3px #676666, 2px 2px #555555;
+  }
+
+
+  .top-section-content {
+    position: relative;
+    margin-top: -30px;
+  }
+
+  .top-section-title{
+    top: 38%;
+    left: 10%;
+    width: 350px;
+  }
+}
+
+/*------- Middle Section --------- */
+  .mid-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    min-height:fit-content;
+  }
+  
+  .body-section {
+    min-width: 900px;
+    min-height: fit-content;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media screen and (max-width: 930px) {
+    .body-section {
+      flex-direction: column;
+      min-width: none;
+      align-items: center;
+    }
+    .card-entry{
+      margin-bottom: 20px;
+    }
+    .body-section{
+      min-width: 500px;
+    }
+  }
+
+  .card-entry{
+    max-width: 400px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 2px 4px 8px rgba(128, 128, 128, 0.8);
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f8f8;
+  }
+
+
+
+  .card-entry p{
+    font-family: "CA Medium", Arial, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 0.95;
+  }
+
+  .card-entry h2{
+    font-family: "CA Medium", Arial, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: larger;
+  }
+
+  .card-entry button {
+    font-family: "CA Medium", Arial, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: large;
+    text-decoration: none;
+    color: orange;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .arcwerx-img{
+    width: 150px;
+  }
+
+  .corsair-ranch-img{
+    width: 100px;
+  }
+
+  .card-entry img{
+    margin-top: 15px;
+    margin-left: 30px;
+  }
+
+  .connect-button{
+    margin-left: 120px;
+  }
+
+  .education-button{
+    margin-left: 118px;
+  }
+
+  .accelerate-button{
+    margin-left:120px;
+  }
+
+  .card-entry-2 button{
+    margin-left: 50px;
+  }
+
+  .card-entry button:hover{
+    text-decoration: underline;
+  }
+
+  .card-desc{
+    padding-top:20px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .card-desc:last-child{
+    padding-bottom: 20px;
+  }
+
+/*------- Bottom Content Styling ---------*/
+  .bottom-section{
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .bottom-content{
+    width: 1100px;
+    text-align: center;
+  }
+
+  .bottom-content h2{
+    font-family: "CA Medium", Arial, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: x-large;
+    line-height: 0.7;
+  }
+
+  .bottom-content a{
+    font-family: "CA Medium", Arial, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: x-large;
+    line-height: 1.5;
+    color: orange;
+    text-decoration: none;
+  }
+
+  @media screen and (max-width: 576px) {
+    .bottom-content h2 {
+      font-size:medium;
+    }
+
+    .bottom-content a{
+      font-size:medium;
+    }
+  }
+
+  .bottom-content a:hover{
+    text-decoration: underline;
+  }
+
+
+/*------ Swal Fire ------*/
+  .custom-link{
+    color: pink;
+  }
