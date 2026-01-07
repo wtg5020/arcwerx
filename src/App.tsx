@@ -9,6 +9,8 @@ function App() {
   const [cursorHover, setCursorHover] = useState(false)
   const [scrollSpeed, setScrollSpeed] = useState(0)
   const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isTouchActive, setIsTouchActive] = useState(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(false)
 
   useEffect(() => {
     // Apply theme class to document root
@@ -21,6 +23,15 @@ function App() {
     }
   }, [isDarkMode])
 
+  // Detect touch device
+  useEffect(() => {
+    const checkTouchDevice = () => {
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      setIsTouchDevice(hasTouch)
+    }
+    checkTouchDevice()
+  }, [])
+
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     
@@ -29,13 +40,18 @@ function App() {
     let lastMouseX = 0
     let lastMouseY = 0
     let lastMouseTime = Date.now()
+    let lastTouchX = 0
+    let lastTouchY = 0
+    let lastTouchTime = Date.now()
     let movementThreshold = 5 // pixels
     let timeThreshold = 1500 // milliseconds - time to wait before showing target locked
     let currentScrollSpeed = 0
 
-    const checkStationary = () => {
+    const checkStationary = (isTouch: boolean = false) => {
       const now = Date.now()
-      const timeSinceLastMove = now - lastMouseTime
+      const timeSinceLastMove = isTouch 
+        ? now - lastTouchTime 
+        : now - lastMouseTime
       
       // Consider stationary if no significant movement for timeThreshold and not scrolling
       if (timeSinceLastMove >= timeThreshold && currentScrollSpeed < 0.1) {
@@ -46,6 +62,9 @@ function App() {
     }
 
     const handleMouseMove = (e: MouseEvent) => {
+      // Only handle mouse on non-touch devices
+      if (isTouchDevice) return
+
       const now = Date.now()
       const deltaX = Math.abs(e.clientX - lastMouseX)
       const deltaY = Math.abs(e.clientY - lastMouseY)
@@ -70,7 +89,65 @@ function App() {
       if (stationaryTimer) {
         clearTimeout(stationaryTimer)
       }
-      stationaryTimer = setTimeout(checkStationary, timeThreshold)
+      stationaryTimer = setTimeout(() => checkStationary(false), timeThreshold)
+    }
+
+    // Touch event handlers for mobile
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!isTouchDevice) return
+      
+      const touch = e.touches[0]
+      if (touch) {
+        setIsTouchActive(true)
+        setCursorPos({ x: touch.clientX, y: touch.clientY })
+        lastTouchX = touch.clientX
+        lastTouchY = touch.clientY
+        lastTouchTime = Date.now()
+        setTargetLocked(false)
+        
+        // Check if touching interactive element
+        const target = e.target as HTMLElement
+        const isInteractive = target.closest('button, a, input, textarea, .nav-target')
+        setCursorHover(!!isInteractive)
+      }
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isTouchDevice || !isTouchActive) return
+      
+      const touch = e.touches[0]
+      if (touch) {
+        const now = Date.now()
+        const deltaX = Math.abs(touch.clientX - lastTouchX)
+        const deltaY = Math.abs(touch.clientY - lastTouchY)
+
+        // Update position
+        setCursorPos({ x: touch.clientX, y: touch.clientY })
+        lastTouchX = touch.clientX
+        lastTouchY = touch.clientY
+        lastTouchTime = now
+
+        // Check if there was significant movement
+        if (deltaX > movementThreshold || deltaY > movementThreshold) {
+          setTargetLocked(false)
+        }
+
+        // Reset stationary timer - will check after timeThreshold
+        if (stationaryTimer) {
+          clearTimeout(stationaryTimer)
+        }
+        stationaryTimer = setTimeout(() => checkStationary(true), timeThreshold)
+      }
+    }
+
+    const handleTouchEnd = () => {
+      if (!isTouchDevice) return
+      
+      setIsTouchActive(false)
+      setTargetLocked(false)
+      if (stationaryTimer) {
+        clearTimeout(stationaryTimer)
+      }
     }
 
     // Scroll speed tracking
@@ -106,9 +183,11 @@ function App() {
         currentScrollSpeed = newSpeed
         // When scroll speed is low and enough time has passed, check if we should become stationary
         if (newSpeed < 0.1) {
-          const timeSinceLastMove = Date.now() - lastMouseTime
+          const timeSinceLastMove = isTouchDevice && isTouchActive
+            ? Date.now() - lastTouchTime
+            : Date.now() - lastMouseTime
           if (timeSinceLastMove >= timeThreshold) {
-            checkStationary()
+            checkStationary(isTouchDevice && isTouchActive)
           }
         }
         return newSpeed
@@ -116,6 +195,10 @@ function App() {
     }, 100)
 
     window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('touchstart', handleTouchStart, { passive: true })
+    window.addEventListener('touchmove', handleTouchMove, { passive: true })
+    window.addEventListener('touchend', handleTouchEnd, { passive: true })
+    window.addEventListener('touchcancel', handleTouchEnd, { passive: true })
     window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
@@ -125,15 +208,20 @@ function App() {
         clearTimeout(stationaryTimer)
       }
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchmove', handleTouchMove)
+      window.removeEventListener('touchend', handleTouchEnd)
+      window.removeEventListener('touchcancel', handleTouchEnd)
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [isTouchDevice, isTouchActive])
 
   return (
     <div className="hud-container">
 
       {/* Custom Targeting Cursor - Only in Dark Mode */}
-      {isDarkMode && <div
+      {/* On desktop: always show, on mobile: only show when touch is active */}
+      {isDarkMode && (!isTouchDevice || isTouchActive) && <div
         className={`custom-cursor ${cursorHover ? 'cursor-hover' : ''}`}
         style={{
           left: `${cursorPos.x}px`,
@@ -162,7 +250,8 @@ function App() {
       </div>}
 
       {/* Target Locked Indicator - Follows Cursor - Only in Dark Mode */}
-      {isDarkMode && targetLocked && (
+      {/* On desktop: show when target locked, on mobile: only show when touch is active AND target locked */}
+      {isDarkMode && targetLocked && (!isTouchDevice || isTouchActive) && (
         <div
           className="target-locked-indicator"
           style={{

@@ -1479,6 +1479,12 @@ textarea.form-input {
   }
 
   .top-status-bar {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: calc(100% - 2rem);
+    margin: 1rem auto;
     flex-direction: column;
     gap: 0.5rem;
     font-size: 0.65rem;
@@ -1548,7 +1554,12 @@ textarea.form-input {
   }
 
   .top-status-bar {
-    width: calc(100% - 40px);
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: calc(100% - 2rem);
+    margin: 1rem auto;
     font-size: 0.6rem;
   }
 
