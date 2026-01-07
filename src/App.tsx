@@ -434,6 +434,149 @@ function App() {
                 </div>
               </div>
             </section>
+
+            {/* Corsair Ranch Section */}
+            <section className="hud-panel corsair-ranch-panel">
+              <div className="panel-header">
+                <span className="panel-indicator">▸</span> CORSAIR RANCH
+              </div>
+              <div className="panel-content">
+                <p className="highlight">
+                  Software Development Hub for the Air Reserve Component
+                </p>
+                <div className="corsair-pillars">
+                  <div className="pillar-item">
+                    <div className="pillar-header">
+                      <span className="marker">►</span> DEVSECOPS
+                    </div>
+                    <div className="pillar-desc">
+                      We perform continuous development, integration, test, deployment, and sustainment
+                      in accordance with DoD CIO directives and DIB guidance for software transformation.
+                    </div>
+                  </div>
+                  <div className="pillar-item">
+                    <div className="pillar-header">
+                      <span className="marker">►</span> USER-CENTRIC DESIGN
+                    </div>
+                    <div className="pillar-desc">
+                      We build what users need and modernize the ARC software development lifecycle
+                      based on requirements from the field, not rigid requirements documents lapsed by emerging threats.
+                    </div>
+                  </div>
+                  <div className="pillar-item">
+                    <div className="pillar-header">
+                      <span className="marker">►</span> EXPERIMENTATION
+                    </div>
+                    <div className="pillar-desc">
+                      We experiment with processes, tools, and culture, always striving to be an
+                      organization focused on delivering usable capability faster.
+                    </div>
+                  </div>
+                </div>
+                <a href="https://arcwerx.org/corsair-ranch" className="panel-link">
+                  <span className="btn-bracket">[</span>
+                  VISIT CORSAIR RANCH
+                  <span className="btn-bracket">]</span>
+                </a>
+              </div>
+            </section>
+
+            {/* Connect Section */}
+            <section className="hud-panel">
+              <div className="panel-header">
+                <span className="panel-indicator">▸</span> CONNECT: ECOSYSTEM
+              </div>
+              <div className="panel-content">
+                <p>
+                  Connect to an ecosystem of empowered ARC innovators that can affect change
+                  at every level of your organization.
+                </p>
+                <div className="alert-box" role="alert">
+                  <span className="alert-icon" aria-hidden="true">ℹ</span>
+                  <span className="alert-text">CONTACT FORMS AVAILABLE</span>
+                </div>
+                <div className="connect-options">
+                  <div className="connect-note">
+                    <span className="marker">►</span> Select your affiliation to connect with our team
+                  </div>
+                  <div className="button-group">
+                    <a href="https://arcwerx.org/contact/civilian" className="action-btn">
+                      <span className="btn-bracket">[</span>
+                      CIVILIAN CONTACT
+                      <span className="btn-bracket">]</span>
+                    </a>
+                    <a href="https://arcwerx.org/contact/government" className="action-btn">
+                      <span className="btn-bracket">[</span>
+                      GOVERNMENT CONTACT
+                      <span className="btn-bracket">]</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Educate Section */}
+            <section className="hud-panel">
+              <div className="panel-header">
+                <span className="panel-indicator">▸</span> EDUCATE: KNOWLEDGE TRANSFER
+              </div>
+              <div className="panel-content">
+                <p>
+                  Gain the knowledge to change your organization's culture - a culture of innovation.
+                </p>
+                <ul className="capability-list">
+                  <li><span className="marker">►</span> Innovation Training Programs</li>
+                  <li><span className="marker">►</span> Technology Workshops</li>
+                  <li><span className="marker">►</span> Leadership Development</li>
+                  <li><span className="marker">►</span> Best Practice Sharing</li>
+                </ul>
+                <a href="https://arcwerx.org/education" className="panel-link">
+                  <span className="btn-bracket">[</span>
+                  EDUCATION OPPORTUNITIES
+                  <span className="btn-bracket">]</span>
+                </a>
+              </div>
+            </section>
+
+            {/* Accelerate Section */}
+            <section className="hud-panel">
+              <div className="panel-header">
+                <span className="panel-indicator">▸</span> ACCELERATE: IDEAS TO REALITY
+              </div>
+              <div className="panel-content">
+                <p>
+                  Accelerate your ideas - get them tested, scaled, and shared across the enterprise.
+                </p>
+                <div className="alert-box" role="alert">
+                  <span className="alert-icon blink" aria-hidden="true">⚠</span>
+                  <span className="alert-text">VPN REQUIRED FOR INTERNAL PORTALS</span>
+                </div>
+                <div className="accelerate-options">
+                  <div className="option-item">
+                    <div className="option-header">
+                      <span className="marker">►</span> SUBMIT AN IDEA
+                    </div>
+                    <div className="option-desc">
+                      Submit your innovation concept for evaluation and potential funding.
+                    </div>
+                    <a href="https://arcwerx.org/submit-idea" className="action-btn-small">
+                      <span className="btn-bracket">[</span>SUBMIT<span className="btn-bracket">]</span>
+                    </a>
+                  </div>
+                  <div className="option-item">
+                    <div className="option-header">
+                      <span className="marker">►</span> MANAGE A PROJECT
+                    </div>
+                    <div className="option-desc">
+                      Access project management tools and track your innovation's progress.
+                    </div>
+                    <a href="https://arcwerx.org/manage-project" className="action-btn-small">
+                      <span className="btn-bracket">[</span>MANAGE<span className="btn-bracket">]</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </main>
 
@@ -444,7 +587,8 @@ function App() {
               ARCWERX ONLINE | TUCSON HUB ACTIVE | CONNECT WITH INNOVATORS |
               ARTEMIS PROGRAM OPERATIONAL | INNOVATION FUNDS AVAILABLE |
               NEXT HACKATHON Q2 2026 | UNCLASSIFIED SUBMISSIONS WELCOME |
-              DEFENSE INNOVATION ACCELERATOR | AIR RESERVE COMPONENT
+              CORSAIR RANCH DEVSECOPS ACTIVE | EDUCATION OPPORTUNITIES AVAILABLE |
+              WE HELP AIRMEN TURN IDEAS INTO REALITY | DEFENSE INNOVATION ACCELERATOR | AIR RESERVE COMPONENT
             </div>
           </div>
           <div className="footer-grid">
@@ -489,7 +633,24 @@ function App() {
             U.S. AIR FORCE RESERVE // ARCWERX INNOVATION HUB // DEPARTMENT OF DEFENSE
           </div>
           <div className="footer-subtext">
-            COMMS CHANNELS: ARCWERX.DSO.MIL | UNCLASSIFIED NETWORK
+            COMMS CHANNELS: ARCWERX.ORG | UNCLASSIFIED NETWORK
+          </div>
+          <div className="footer-quicklinks">
+            <div className="quicklinks-header">QUICKLINKS:</div>
+            <div className="quicklinks-grid">
+              <a href="https://www.afwerx.af.mil/" target="_blank" rel="noopener noreferrer" className="quicklink-item">
+                ► AFWERX
+              </a>
+              <a href="https://arcwerx.org/corsair-ranch" className="quicklink-item">
+                ► CORSAIR RANCH
+              </a>
+              <a href="https://www.afsbirsttr.af.mil/Program/Overview/" target="_blank" rel="noopener noreferrer" className="quicklink-item">
+                ► SBIR STTR
+              </a>
+              <a href="https://www.nsin.us/problem-intake-form/" target="_blank" rel="noopener noreferrer" className="quicklink-item">
+                ► NSIN
+              </a>
+            </div>
           </div>
         </footer>
       </div>
