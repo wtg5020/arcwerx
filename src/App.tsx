@@ -23,15 +23,54 @@ function App() {
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
-    const lockTimer = setTimeout(() => setTargetLocked(true), 2000)
+    
+    // Stationary detection for target lock
+    let stationaryTimer: number | null = null
+    let lastMouseX = 0
+    let lastMouseY = 0
+    let lastMouseTime = Date.now()
+    let movementThreshold = 5 // pixels
+    let timeThreshold = 1500 // milliseconds - time to wait before showing target locked
+    let currentScrollSpeed = 0
+
+    const checkStationary = () => {
+      const now = Date.now()
+      const timeSinceLastMove = now - lastMouseTime
+      
+      // Consider stationary if no significant movement for timeThreshold and not scrolling
+      if (timeSinceLastMove >= timeThreshold && currentScrollSpeed < 0.1) {
+        setTargetLocked(true)
+      } else {
+        setTargetLocked(false)
+      }
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
+      const now = Date.now()
+      const deltaX = Math.abs(e.clientX - lastMouseX)
+      const deltaY = Math.abs(e.clientY - lastMouseY)
+
+      // Update position
       setCursorPos({ x: e.clientX, y: e.clientY })
+      lastMouseX = e.clientX
+      lastMouseY = e.clientY
+      lastMouseTime = now
+
+      // Check if there was significant movement
+      if (deltaX > movementThreshold || deltaY > movementThreshold) {
+        setTargetLocked(false)
+      }
 
       // Check if hovering over interactive element
       const target = e.target as HTMLElement
       const isInteractive = target.closest('button, a, input, textarea, .nav-target')
       setCursorHover(!!isInteractive)
+
+      // Reset stationary timer - will check after timeThreshold
+      if (stationaryTimer) {
+        clearTimeout(stationaryTimer)
+      }
+      stationaryTimer = setTimeout(checkStationary, timeThreshold)
     }
 
     // Scroll speed tracking
@@ -44,11 +83,15 @@ function App() {
       const timeDelta = now - lastScrollTime
       const scrollDelta = Math.abs(currentScrollY - lastScrollY)
 
+      // If scrolling, user is not stationary
+      setTargetLocked(false)
+
       if (timeDelta > 0) {
         // Calculate velocity in pixels per second
         const velocity = (scrollDelta / timeDelta) * 1000
         // Convert to MACH (scaled for effect: ~1000 pixels/sec = MACH 1.0)
         const machSpeed = Math.min(velocity / 1000, 9.9)
+        currentScrollSpeed = machSpeed
         setScrollSpeed(machSpeed)
       }
 
@@ -59,8 +102,16 @@ function App() {
     // Decay scroll speed to 0 when not scrolling
     const decayInterval = setInterval(() => {
       setScrollSpeed((prev) => {
-        if (prev <= 0.1) return 0
-        return prev * 0.9 // Decay by 10% each interval
+        const newSpeed = prev <= 0.1 ? 0 : prev * 0.9
+        currentScrollSpeed = newSpeed
+        // When scroll speed is low and enough time has passed, check if we should become stationary
+        if (newSpeed < 0.1) {
+          const timeSinceLastMove = Date.now() - lastMouseTime
+          if (timeSinceLastMove >= timeThreshold) {
+            checkStationary()
+          }
+        }
+        return newSpeed
       })
     }, 100)
 
@@ -70,7 +121,9 @@ function App() {
     return () => {
       clearInterval(timer)
       clearInterval(decayInterval)
-      clearTimeout(lockTimer)
+      if (stationaryTimer) {
+        clearTimeout(stationaryTimer)
+      }
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('scroll', handleScroll)
     }
@@ -78,18 +131,6 @@ function App() {
 
   return (
     <div className="hud-container">
-      {/* Theme Toggle Button */}
-      <button
-        className="theme-toggle"
-        onClick={() => setIsDarkMode(!isDarkMode)}
-        aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        {isDarkMode ? (
-          <span aria-hidden="true">☀ LIGHT MODE</span>
-        ) : (
-          <span aria-hidden="true">🌙 DARK MODE</span>
-        )}
-      </button>
 
       {/* Custom Targeting Cursor - Only in Dark Mode */}
       {isDarkMode && <div
@@ -308,7 +349,7 @@ function App() {
               <div className="panel-content">
                 <div className="alert-box" role="alert" aria-live="polite">
                   <span className="alert-icon blink" aria-hidden="true">⚠</span>
-                  <span className="alert-text">CLASSIFIED – UNCLASSIFIED SUBMISSIONS ONLY</span>
+                  <span className="alert-text">UNCLASSIFIED SUBMISSIONS ONLY</span>
                 </div>
                 <form className="hud-form" aria-label="Innovation submission form">
                   <div className="form-group">
@@ -397,7 +438,7 @@ function App() {
                   </div>
                 </div>
                 <p className="access-note">
-                  <span className="label">DOMAIN:</span> arcwerx.dso.mil<br/>
+                  <span className="label">DOMAIN:</span> arcwerx.org<br/>
                   <span className="label">CLASSIFICATION:</span> UNCLASSIFIED
                 </p>
               </div>
@@ -630,7 +671,7 @@ function App() {
           </div>
           <div className="footer-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
           <div className="footer-text">
-            U.S. AIR FORCE RESERVE // ARCWERX INNOVATION HUB // DEPARTMENT OF DEFENSE
+            AIR NATIONAL GUARD // U.S. AIR FORCE RESERVE // ARCWERX INNOVATION HUB // DEPARTMENT OF DEFENSE
           </div>
           <div className="footer-subtext">
             COMMS CHANNELS: ARCWERX.ORG | UNCLASSIFIED NETWORK
@@ -638,19 +679,33 @@ function App() {
           <div className="footer-quicklinks">
             <div className="quicklinks-header">QUICKLINKS:</div>
             <div className="quicklinks-grid">
-              <a href="https://www.afwerx.af.mil/" target="_blank" rel="noopener noreferrer" className="quicklink-item">
+              <a href="https://arcwerx.org/placeholder" className="quicklink-item">
                 ► AFWERX
               </a>
               <a href="https://arcwerx.org/corsair-ranch" className="quicklink-item">
                 ► CORSAIR RANCH
               </a>
-              <a href="https://www.afsbirsttr.af.mil/Program/Overview/" target="_blank" rel="noopener noreferrer" className="quicklink-item">
+              <a href="https://arcwerx.org/placeholder" className="quicklink-item">
                 ► SBIR STTR
               </a>
-              <a href="https://www.nsin.us/problem-intake-form/" target="_blank" rel="noopener noreferrer" className="quicklink-item">
+              <a href="https://arcwerx.org/placeholder" className="quicklink-item">
                 ► NSIN
               </a>
             </div>
+          </div>
+          {/* Theme Toggle Button */}
+          <div className="footer-theme-toggle">
+            <button
+              className="theme-toggle"
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {isDarkMode ? (
+                <span aria-hidden="true">☀ LIGHT MODE</span>
+              ) : (
+                <span aria-hidden="true">🌙 DARK MODE</span>
+              )}
+            </button>
           </div>
         </footer>
       </div>

@@ -67,11 +67,14 @@
 }
 
 /* Theme Toggle Button */
+.footer-theme-toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
 .theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10002;
   padding: 0.75rem 1.5rem;
   font-size: 0.85rem;
   font-weight: bold;
